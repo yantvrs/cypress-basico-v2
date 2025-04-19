@@ -18,25 +18,24 @@ describe('Central de Atendimento ao Cliente TAT', function() {
 
     it('preencher os campos obrigatórios e enviar o formulário', function() {
         const longText = ' texto texto texto texto texto texto texto textotexto texto texto textotexto texto texto textotexto texto texto textotexto texto texto textotexto texto texto textotexto texto texto textotexto texto texto textotexto texto texto textotexto texto texto textotexto texto texto textotexto texto texto textotexto texto texto textotexto texto texto texto'
-        cy.get('#firstName').type('Yan').click()
-        cy.get('#lastName').type('Tavares').click()
-        cy.get('#email').type('fulano@gmail.com').click()
-        cy.get('#phone').type('997028678').click()
-        cy.get('#open-text-area').type(longText, {delay : 0}).click()
+        cy.get('#firstName').type('Yan')
+        cy.get('#lastName').type('Tavares')
+        cy.get('#email').type('fulano@gmail.com')
+        cy.get('#phone').type('997028678')
+        cy.get('#open-text-area').type(longText, {delay : 0})
         cy.get('button[type="Submit"]').click()
 
         cy.get('.success').should('be.visible')
     });
 
     it('exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', function() {
-        cy.get('#firstName').type('Yan').click()
-        cy.get('#lastName').type('Tavares').click()
-        cy.get('#email').type('fulano@gmail;com').click()
-        cy.get('#phone').type('997028678').click()
-        cy.get('#open-text-area').type('Texto').click()
+        cy.get('#firstName').type('Yan')
+        cy.get('#lastName').type('Tavares')
+        cy.get('#email').type('fulano@gmail;com')
+        cy.get('#open-text-area').type('Texto')
         cy.get('button[type="Submit"]').click()
 
-        cy.get('.error').should('be.visible')
+        cy.get('.error').should('be.visible', 'error')
     })
 
     it('campo número de telefone só aceita valores numéricos', function() {
@@ -45,14 +44,41 @@ describe('Central de Atendimento ao Cliente TAT', function() {
         .should('have.value', '')
     })
 
-    it.only('não preenche número do telefone quando ele é obrigatório', function() {
-        cy.get('#firstName').type('Yan').click()
-        cy.get('#lastName').type('Tavares').click()
-        cy.get('#email').type('fulano@gmail;com').click()
-        cy.get('#open-text-area').type('Texto').click()
+    it('não preenche número do telefone quando ele é obrigatório', function() {
+        cy.get('#firstName').type('Yan')
+        cy.get('#lastName').type('Tavares')
+        cy.get('#email').type('fulano@gmail.com')
+        cy.get('#open-text-area').type('Texto')
         cy.get('#phone-checkbox').click()
         cy.get('button[type="Submit"]').click()
 
+        cy.get('.error').should('be.visible')
+    })
+
+    it.only('preenche e limpa os campos nome, sobrenome, email e telefone', function() {
+
+        cy.get('#firstName')
+            .type('Yan')
+            .should('have.value','Yan')
+            .clear()
+            .should('have.value','')
+        cy.get('#lastName')
+            .type('Tavares')
+            .should('have.value', 'Tavares')
+            .clear()
+            .should('have.value', '')
+        cy.get('#email')
+            .type('yan@gmail.com')
+            .should('have.value', 'yan@gmail.com')
+            .clear()
+            .should('have.value', '')
+        cy.get('#open-text-area')
+            .type('Teste')
+            .should('have.value', 'Teste')
+            .clear()
+            .should('have.value', '')
+
+        cy.get('.button').click()
         cy.get('.error').should('be.visible')
     })
 })
