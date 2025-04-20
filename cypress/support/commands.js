@@ -16,3 +16,8 @@ Cypress.Commands.add('fillMandatoryFieldsAndSubmitUsingContains', function() {
     // cy.contains('Enviar').click()
     cy.contains('button', 'Enviar').click()
 })
+
+Cypress.Commands.add('selecionaProdutoYoutube', () => {
+    cy.get('#product').select('YouTube')
+        .should('have.value', 'youtube')
+})
